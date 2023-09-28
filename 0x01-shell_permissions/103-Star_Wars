@@ -1,2 +1,2 @@
 #!/bin/bash
-telnet url
+telnet towel.blikenligts.nl 
