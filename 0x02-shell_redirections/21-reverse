@@ -1,2 +1,2 @@
 #!/bin/bash
-"input_text" | rev
+rev
