@@ -32,7 +32,7 @@ Performing maintenance tasks, such as deploying new code or updates, may require
 Limited Scalability:
 The infrastructure may struggle to handle high traffic volumes as it's confined to a single server. Scaling up to accommodate increased traffic would require significant hardware upgrades or migration to a more scalable architecture.
 
-Task 0: Distributed Web Infrastructure
+Task 1: Distributed Web Infrastructure
 Design Overview:
 For this three-server web infrastructure, the aim is to create a scalable, fault-tolerant setup to handle web traffic efficiently. It consists of two web servers - one serving as an Nginx web server, the other as an application server. Additionally, there is an HAproxy load balancer to distribute incoming traffic, and a MySQL database for data storage.
 
