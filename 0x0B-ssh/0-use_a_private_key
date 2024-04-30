@@ -2,4 +2,4 @@
 # Bash csript that uses ssh to connect to a server
 # Using private key ~/.ssh/school
 # User ubuntu
-ssh ubuntu@35.168.2.29 -i ~/.ssh/school
+ssh ubuntu@ 100.26.215.136	-i ~/.ssh/school
