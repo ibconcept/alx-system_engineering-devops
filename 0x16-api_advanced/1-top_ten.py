@@ -1,41 +1,37 @@
 #!/usr/bin/python3
 """
-Script that queries subscribers on a given Reddit subreddit.
+Script to print hot posts on a given Reddit subreddit.
 """
 
 import requests
 
-def number_of_subscribers(subreddit):
-    """
-    Return the total number of subscribers on a given subreddit.
 
-    Args:
-        subreddit (str): The name of the subreddit to query.
+def top_ten(subreddit):
+    """Print the titles of the 10 hottest posts on a given subreddit."""
+    # Construct the URL for the subreddit's hot posts in JSON format
+    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
 
-    Returns:
-        int: The total number of subscribers of the subreddit.
-    """
-    url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
+    # Define headers for the HTTP request, including User-Agent
     headers = {
-        "User-Agent": "example"  # Example user-agent string
+        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
     }
 
-    try:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()  # Raise an exception for 4xx or 5xx errors
-        data = response.json()
-        if 'data' in data and 'subscribers' in data['data']:
-            subscribers = data['data']['subscribers']
-            return subscribers
-        else:
-            print("Unexpected response format:", data)
-            return 0
-    except requests.exceptions.RequestException as e:
-        print("Error fetching data:", e)
-        return 0
+    # Define parameters for the request, limiting the number of posts to 10
+    params = {
+        "limit": 10
+    }
 
+    # Send a GET request to the subreddit's hot posts page
+    response = requests.get(url, headers=headers, params=params,
+                            allow_redirects=False)
 
-# Example usage:
-subreddit_name = "python"
-subscribers = number_of_subscribers(subreddit_name)
-print("Number of subscribers in /r/{}: {}".format(subreddit_name, subscribers))
+    # Check if the response status code indicates a not-found error (404)
+    if response.status_code == 404:
+        print("None")
+        return
+
+    # Parse the JSON response and extract the 'data' section
+    results = response.json().get("data")
+
+    # Print the titles of the top 10 hottest posts
+    [print(c.get("data").get("title")) for c in results.get("children")]
