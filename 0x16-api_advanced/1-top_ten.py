@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+"""
+Module to fetch and print titles of the first 10 hot posts in a given subreddit.
+"""
 
 from requests import get
 
@@ -8,7 +11,6 @@ def top_ten(subreddit):
     Function that queries the Reddit API and prints the titles of the first
     10 hot posts listed for a given subreddit.
     """
-
     if subreddit is None or not isinstance(subreddit, str):
         print("None")
         return
@@ -33,10 +35,11 @@ def top_ten(subreddit):
         for post in my_data:
             print(post.get('data', {}).get('title', 'None'))
 
-    except Exception as e:
+    except Exception:
         print("None")
 
 
 # Example usage
-top_ten("python")
+if __name__ == "__main__":
+    top_ten("python")
 
