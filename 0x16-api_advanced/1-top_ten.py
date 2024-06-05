@@ -1,42 +1,41 @@
 #!/usr/bin/python3
-'''
-    This module contains the function top_ten
-'''
+"""
+Script that queries subscribers on a given Reddit subreddit.
+"""
 
 import requests
-from sys import argv
 
+def number_of_subscribers(subreddit):
+    """
+    Return the total number of subscribers on a given subreddit.
 
-def top_ten(subreddit):
-    '''
-        Returns the top ten posts for a given subreddit
-    '''
+    Args:
+        subreddit (str): The name of the subreddit to query.
 
-    user_agent = {'User-Agent': 'MyRedditScript/1.0'}
-
-    url = ('https://www.reddit.com/r/{}/hot/.json?'
-           'limit=10'.format(subreddit))
+    Returns:
+        int: The total number of subscribers of the subreddit.
+    """
+    url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
+    headers = {
+        "User-Agent": "example"  # Example user-agent string
+    }
 
     try:
-        response = requests.get(url, headers=user_agent)
-        response.raise_for_status()  # Raise an exception for HTTP errors
-
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()  # Raise an exception for 4xx or 5xx errors
         data = response.json()
+        if 'data' in data and 'subscribers' in data['data']:
+            subscribers = data['data']['subscribers']
+            return subscribers
+        else:
+            print("Unexpected response format:", data)
+            return 0
+    except requests.exceptions.RequestException as e:
+        print("Error fetching data:", e)
+        return 0
 
-        for post in data.get('data').get('children'):
-            print(post.get('data').get('title'))
 
-    except requests.HTTPError as e:
-        print("HTTP error occurred:", e)
-    except requests.RequestException as e:
-        print("Request exception occurred:", e)
-    except Exception as e:
-        print("An unexpected error occurred:", e)
-
-
-if __name__ == "__main__":
-    subreddit_name = argv[1] if len(argv) > 1 else None
-    if subreddit_name:
-        top_ten(subreddit_name)
-    else:
-        print("Please provide a subreddit name as a command-line argument.")
+# Example usage:
+subreddit_name = "python"
+subscribers = number_of_subscribers(subreddit_name)
+print("Number of subscribers in /r/{}: {}".format(subreddit_name, subscribers))
