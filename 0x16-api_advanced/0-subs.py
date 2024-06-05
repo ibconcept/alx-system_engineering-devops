@@ -40,4 +40,3 @@ def number_of_subscribers(subreddit):
 subreddit_name = "python"
 subscribers = number_of_subscribers(subreddit_name)
 print("Number of subscribers in /r/{}: {}".format(subreddit_name, subscribers))
-
