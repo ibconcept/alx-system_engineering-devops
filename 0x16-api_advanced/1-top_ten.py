@@ -15,7 +15,7 @@ def top_ten(subreddit):
         print("None")
         return
 
-    user_agent = {'User-agent': 'Google Chrome Version 81.0.4044.129'}
+    user_agent = {'User-agent': 'Mozilla/5.0'}
     params = {'limit': 10}
     url = f'https://www.reddit.com/r/{subreddit}/hot/.json'
 
@@ -35,11 +35,7 @@ def top_ten(subreddit):
         for post in posts:
             print(post.get('data', {}).get('title', 'None'))
 
-    except Exception:
+    except Exception as e:
         print("None")
 
-
-# Example usage (uncomment to test)
-# if __name__ == "__main__":
-#     top_ten("python")
 
