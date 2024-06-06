@@ -27,7 +27,7 @@ def recurse(subreddit, hot_list=[], after="", count=0):
 
     # Define headers for the HTTP request, including User-Agent
     headers = {
-        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
+        "User-Agent": "linux:0x16.api.advanced:v1.0.0 )"
     }
 
     # Define parameters for the request, including pagination and limit
