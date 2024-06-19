@@ -1,49 +1,37 @@
 #!/usr/bin/python3
-
 """
-Prints the titles of the first 10 hot posts listed for a given subreddit
+Script to print hot posts on a given Reddit subreddit.
 """
 
-from requests import get
+import requests
+
 
 def top_ten(subreddit):
-    """
-    Function that queries the Reddit API and prints the titles of the first
-    10 hot posts listed for a given subreddit
-    """
-    if not isinstance(subreddit, str):
+    """Print the titles of the 10 hottest posts on a given subreddit."""
+    # Construct the URL for the subreddit's hot posts in JSON format
+    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
+
+    # Define headers for the HTTP request, including User-Agent
+    headers = {
+        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
+    }
+
+    # Define parameters for the request, limiting the number of posts to 10
+    params = {
+        "limit": 10
+    }
+
+    # Send a GET request to the subreddit's hot posts page
+    response = requests.get(url, headers=headers, params=params,
+                            allow_redirects=False)
+
+    # Check if the response status code indicates a not-found error (404)
+    if response.status_code == 404:
         print("None")
         return
 
-    user_agent = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36'}
-    params = {'limit': 10}
-    url = f'https://www.reddit.com/r/{subreddit}/hot/.json'
+    # Parse the JSON response and extract the 'data' section
+    results = response.json().get("data")
 
-    try:
-        response = get(url, headers=user_agent, params=params, allow_redirects=False)
-        if response.status_code != 200:
-            print("None")
-            return
-        
-        results = response.json()
-        my_data = results.get('data', {}).get('children', [])
-        
-        if not my_data:
-            print("None")
-            return
-        
-        for post in my_data:
-            title = post.get('data', {}).get('title')
-            if title:
-                print(title)
-            else:
-                print("None")
-    
-    except Exception:
-        print("None")
-
-# Test the function with a real subreddit and a non-existent subreddit
-if __name__ == "__main__":
-    top_ten("python")  # Should print titles of the top 10 posts in r/python
-    top_ten("nonexistentsubreddit123")  # Should print "None"
-
+    # Print the titles of the top 10 hottest posts
+    [print(c.get("data").get("title")) for c in results.get("children")]
