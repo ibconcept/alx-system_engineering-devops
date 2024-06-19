@@ -1,38 +1,45 @@
-import requests
+#!/usr/bin/python3
+
+"""
+Prints the titles of the first 10 hot posts listed for a given subreddit
+"""
+
+from requests import get
 
 def top_ten(subreddit):
-    """Print the titles of the 10 hottest posts on a given subreddit."""
-    url = f"https://www.reddit.com/r/{subreddit}/hot/.json"
-    headers = {
-        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
-    }
-    params = {
-        "limit": 10
-    }
+    """
+    Function that queries the Reddit API and prints the titles of the first
+    10 hot posts listed for a given subreddit
+    """
+    if not isinstance(subreddit, str):
+        print("None")
+        return
+
+    user_agent = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36'}
+    params = {'limit': 10}
+    url = f'https://www.reddit.com/r/{subreddit}/hot/.json'
 
     try:
-        response = requests.get(url, headers=headers, params=params, allow_redirects=False)
-        
+        response = get(url, headers=user_agent, params=params, allow_redirects=False)
         if response.status_code != 200:
             print("None")
             return
         
-        data = response.json().get("data")
-        if data is None:
+        results = response.json()
+        my_data = results.get('data', {}).get('children', [])
+        
+        if not my_data:
             print("None")
             return
         
-        children = data.get("children", [])
-        if not children:
-            print("None")
-            return
-        
-        for child in children:
-            print(child.get("data", {}).get("title"))
-
-    except requests.RequestException:
-        print("None")
-    except ValueError:
+        for post in my_data:
+            title = post.get('data', {}).get('title')
+            if title:
+                print(title)
+            else:
+                print("None")
+    
+    except Exception:
         print("None")
 
 # Test the function with a real subreddit and a non-existent subreddit
