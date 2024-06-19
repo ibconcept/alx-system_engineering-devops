@@ -1,14 +1,8 @@
-#!/usr/bin/python3
-"""
-Script to print hot posts on a given Reddit subreddit.
-"""
-
 import requests
-
 
 def top_ten(subreddit):
     """Print the titles of the 10 hottest posts on a given subreddit."""
-    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
+    url = f"https://www.reddit.com/r/{subreddit}/hot/.json"
     headers = {
         "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
     }
@@ -18,17 +12,25 @@ def top_ten(subreddit):
 
     try:
         response = requests.get(url, headers=headers, params=params, allow_redirects=False)
-        if response.status_code == 200:
-            results = response.json().get("data")
-            children = results.get("children", [])
-            if not children:
-                print("None")
-                return
-            for c in children:
-                print(c.get("data").get("title"))
-        else:
+        
+        if response.status_code != 200:
             print("None")
-    except requests.RequestException as e:
+            return
+        
+        data = response.json().get("data")
+        if data is None:
+            print("None")
+            return
+        
+        children = data.get("children", [])
+        if not children:
+            print("None")
+            return
+        
+        for child in children:
+            print(child.get("data", {}).get("title"))
+
+    except requests.RequestException:
         print("None")
     except ValueError:
         print("None")
