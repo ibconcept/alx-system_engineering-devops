@@ -13,7 +13,7 @@ def top_ten(subreddit):
 
     # Define headers for the HTTP request, including User-Agent
     headers = {
-        "User-Agent": "0x16.api.advanced)"
+        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
     }
 
     # Define parameters for the request, limiting the number of posts to 10
